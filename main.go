@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"sort"
 	"strconv"
 	"time"
 
@@ -68,8 +69,10 @@ func main() {
 	for key, _ := range category {
 		categoryIds = append(categoryIds, key)
 	}
+	sort.Strings(categoryIds)
 	categoryIdx := getCategory()
 	id := categoryIds[categoryIdx]
+
 	articles := scrapeArticles(id)
 	writeArticles(category[id], articles)
 }
@@ -123,12 +126,17 @@ func extractArticle(subURL string, ch chan<- article) {
 
 func writeArticles(category string, articles []article) {
 	length := len(articles)
-	path := "articles/" + time.Now().Format("2006-January-02") + "_" + category + strconv.Itoa(length) + ".hwp"
+	path := "articles/" + time.Now().Format("2006-January-02") + "_" + category + "_" + strconv.Itoa(length) + ".hwp"
 	file, err := os.Create(path)
 	tools.CheckError(err)
 	defer file.Close()
 
-	for idx, _ := range articles {
-		fmt.Print(idx)
+	var text string
+
+	for _, a := range articles {
+		article := a.title + "\t" + a.createAt + "\n" + a.content
+		text = text + article
 	}
+	
+	len := file.WriteString(text)
 }
