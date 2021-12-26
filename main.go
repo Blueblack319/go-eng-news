@@ -134,9 +134,10 @@ func writeArticles(category string, articles []article) {
 	var text string
 
 	for _, a := range articles {
-		article := a.title + "\t" + a.createAt + "\n" + a.content
+		article := a.title + "\n" + a.createAt + "\n" + a.content + "\n"
 		text = text + article
 	}
-	
-	len := file.WriteString(text)
+
+	_, e := file.WriteString(text)
+	tools.CheckError(e)
 }
