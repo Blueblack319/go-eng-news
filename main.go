@@ -62,8 +62,7 @@ func getCategory() int {
 func main() {
 	// First of all, scrape articles in first page.
 	// Make many NewDocuments using goroutine
-	// TODO: create mainChannel to scrape articles in all category at once
-	// TODO:
+	// create mainChannel to scrape articles in all category at once
 
 	// category
 	for key, _ := range category {
@@ -90,7 +89,7 @@ func scrapeArticles(categoryNum string) []article {
 	var articles []article
 	ch := make(chan article)
 
-	baseURL := URL + "/list.php?ct=" + categoryNum
+	baseURL := URL + "/list.php?ct=" + categoryNum + "&np=1&mp=1"
 	doc, err := getDocument(baseURL)
 	tools.CheckError(err)
 
